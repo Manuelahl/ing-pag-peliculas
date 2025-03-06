@@ -28,7 +28,7 @@ router.post('/', [
             return res.status(400).json({ message: errors.array() });
         }
 
-        // Verificar que genre, director y producer estén activos, y que type tenga un name válido
+        // Verificar que genre, director y producer estén activos, y que type este definido
         const genre = await Genre.findById(req.body.genre);
         if (genre.state !== 'Activo') {
             return res.status(400).send('Genre not activo');
