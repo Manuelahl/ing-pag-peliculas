@@ -122,15 +122,15 @@ router.put('/:mediaId', [
             return res.status(400).send('Media not exist');
         }
 
-        const existMediaForSerial = await Media.findOne({ serial: req.body.serial});
+        /* const existMediaForSerial = await Media.findOne({ serial: req.body.serial});
         if (existMediaForSerial) {
             return res.status(400).send('Exist serial');
-        }
+        } 
 
         const existMediaForUrl = await Media.findOne({ url: req.body.url});
         if (existMediaForUrl) {
             return res.status(400).send('Exist url');
-        }
+        } */
 
         media.serial = req.body.serial;
         media.title = req.body.title;
@@ -152,6 +152,20 @@ router.put('/:mediaId', [
         res.status(500).send('message error')
     }
 
+});
+
+router.get('/:mediaId', async function(req, res) {
+    try {
+        const media = await Media.findById(req.params.mediaId);
+        if(!media) {
+            return res.status(404).send('No exist media');
+        }
+        res.send(media);
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).send('message errror');
+    }
 });
 
 module.exports = router;
