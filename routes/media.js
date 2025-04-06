@@ -122,7 +122,7 @@ router.put('/:mediaId', [
             return res.status(400).send('Media not exist');
         }
 
-        /* const existMediaForSerial = await Media.findOne({ serial: req.body.serial});
+        const existMediaForSerial = await Media.findOne({ serial: req.body.serial});
         if (existMediaForSerial) {
             return res.status(400).send('Exist serial');
         } 
@@ -130,7 +130,7 @@ router.put('/:mediaId', [
         const existMediaForUrl = await Media.findOne({ url: req.body.url});
         if (existMediaForUrl) {
             return res.status(400).send('Exist url');
-        } */
+        }
 
         media.serial = req.body.serial;
         media.title = req.body.title;
