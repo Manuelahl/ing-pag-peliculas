@@ -1,12 +1,13 @@
 const { Router } = require('express');
 const Genre = require('../models/Genre');
 const { validationResult, check } = require('express-validator');
+const { verificarToken, soloAdmin } = require('../middleware/auth');
 
 const router = Router();
 
 //SERVICIOS
 
-router.post('/', [
+router.post('/', verificarToken, soloAdmin, [
     check('name', 'invalid.name').not().isEmpty(),
     check('state', 'invalid.state').isIn([ 'Activo', 'Inactivo' ]),
     check('description', 'invalid.description').not().isEmpty(),
@@ -35,7 +36,7 @@ router.post('/', [
 
 });
 
-router.get('/', async function(req, res) {
+router.get('/', verificarToken, async function(req, res) {
     try {
         const genres = await Genre.find();
         res.send(genres);
@@ -46,7 +47,7 @@ router.get('/', async function(req, res) {
     }
 });
 
-router.put('/:genreId', [
+router.put('/:genreId', verificarToken, soloAdmin, [
     check('name', 'invalid.name').not().isEmpty(),
     check('state', 'invalid.state').isIn([ 'Activo', 'Inactivo' ]),
     check('description', 'invalid.description').not().isEmpty(),

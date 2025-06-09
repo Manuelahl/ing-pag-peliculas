@@ -5,12 +5,14 @@ const Director = require('../models/Director');
 const Producer = require('../models/Producer');
 const Type = require('../models/Type');
 const { validationResult, check } = require('express-validator');
+const { verificarToken, soloAdmin } = require('../middleware/auth');
 
 const router = Router();
 
 //SERVICIOS
 
-router.post('/', [
+// Solo admin puede crear
+router.post('/', verificarToken, soloAdmin, [
     check('serial', 'invalid.serial').not().isEmpty(),
     check('title', 'invalid.title').not().isEmpty(),
     check('sinopsis', 'invalid.sinopsis').not().isEmpty(),
@@ -83,7 +85,8 @@ router.post('/', [
 
 });
 
-router.get('/', async function(req, res) {
+// Todos (admin y docente) pueden ver
+router.get('/', verificarToken, async function(_req, res) {
     try {
         const medias = await Media.find().populate([
             { path: 'genre', select: 'name state' },
@@ -99,7 +102,7 @@ router.get('/', async function(req, res) {
     }
 });
 
-router.put('/:mediaId', [
+router.put('/:mediaId', verificarToken, soloAdmin, [
     check('serial', 'invalid.serial').not().isEmpty(),
     check('title', 'invalid.title').not().isEmpty(),
     check('sinopsis', 'invalid.sinopsis').not().isEmpty(),

@@ -1,12 +1,13 @@
 const { Router } = require('express');
 const Producer = require('../models/Producer');
 const { validationResult, check } = require('express-validator');
+const { verificarToken, soloAdmin } = require('../middleware/auth');
 
 const router = Router();
 
 //SERVICIOS
 
-router.post('/', [
+router.post('/', verificarToken, soloAdmin, [
     check('name', 'invalid.name').not().isEmpty(),
     check('state', 'invalid.state').isIn([ 'Activo', 'Inactivo' ]),
     check('slogan', 'invalid.slogan').not().isEmpty(),
@@ -37,7 +38,7 @@ router.post('/', [
 
 });
 
-router.get('/', async function(req, res) {
+router.get('/', verificarToken, async function(req, res) {
     try {
         const producers = await Producer.find();
         res.send(producers);
@@ -48,7 +49,7 @@ router.get('/', async function(req, res) {
     }
 });
 
-router.put('/:producerId', [
+router.put('/:producerId', verificarToken, soloAdmin, [
     check('name', 'invalid.name').not().isEmpty(),
     check('state', 'invalid.state').isIn([ 'Activo', 'Inactivo' ]),
     check('slogan', 'invalid.slogan').not().isEmpty(),

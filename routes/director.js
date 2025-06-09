@@ -1,12 +1,13 @@
 const { Router } = require('express');
 const Director = require('../models/Director');
 const { validationResult, check } = require('express-validator');
+const { verificarToken, soloAdmin } = require('../middleware/auth');
 
 const router = Router();
 
 //SERVICIOS
 
-router.post('/', [
+router.post('/', verificarToken, soloAdmin, [
     check('name', 'invalid.name').not().isEmpty(),
     check('state', 'invalid.state').isIn([ 'Activo', 'Inactivo' ]),
 ], async function (req, res) {
@@ -33,7 +34,7 @@ router.post('/', [
 
 });
 
-router.get('/', async function(req, res) {
+router.get('/', verificarToken, async function(req, res) {
     try {
         const directors = await Director.find();
         res.send(directors);
@@ -44,7 +45,7 @@ router.get('/', async function(req, res) {
     }
 });
 
-router.put('/:directorId', [
+router.put('/:directorId', verificarToken, soloAdmin, [
     check('name', 'invalid.name').not().isEmpty(),
     check('state', 'invalid.state').isIn([ 'Activo', 'Inactivo' ]),
 ], async function (req, res) {
